@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "jax-ml-seq-tools"
 version = "0.1.0"
-description = "JAX/Flax tools for DNA sequence classification (CNN + Transformer)."
-requires-python = ">=3.11"
+description = "JAX/Flax tools for DNA sequence classification"
+requires-python = ">=3.10"
 dependencies = [
     "pandas==2.2.2",
     "numpy==1.26.4",
