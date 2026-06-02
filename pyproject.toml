@@ -8,17 +8,17 @@ version = "0.1.0"
 description = "JAX/Flax tools for DNA sequence classification (CNN + Transformer)."
 requires-python = ">=3.11"
 dependencies = [
-    "flax>=0.12.7,<0.13",
-    "jax>=0.10.1,<0.11",
-    "matplotlib>=3.10.9,<4",
-    "numpy>=2.4.6,<3",
-    "optax>=0.2.8,<0.3",
-    "orbax-checkpoint>=0.11.40,<0.12",
-    "pandas>=3.0.3,<4",
-    "scikit-learn>=1.9.0,<2",
-    "seaborn>=0.13.2,<0.14",
-    "tensorflow>=2.21.0,<3",
-    "tqdm>=4.67.3,<5",
+    "flax==0.10.4",
+    "jax==0.10.4",
+    "matplotlib==3.10.1",
+    "numpy==1.26.4",
+    "optax==1.26.4",
+    "orbax-checkpoint==0.11.9",
+    "pandas==2.2.2",
+    "scikit-learn==1.4.2",
+    "seaborn==0.13.2",
+    "tensorflow==2.21.0",
+    "tqdm==4.67.3",
 ]
 
 [project.optional-dependencies]
