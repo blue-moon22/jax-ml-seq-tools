@@ -9,7 +9,7 @@ description = "JAX/Flax tools for DNA sequence classification (CNN + Transformer
 requires-python = ">=3.11"
 dependencies = [
     "flax==0.10.4",
-    "jax==0.10.4",
+    "jax==0.5.1",
     "matplotlib==3.10.1",
     "numpy==1.26.4",
     "optax==1.26.4",
