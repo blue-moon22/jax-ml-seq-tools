@@ -10,6 +10,9 @@ requires-python = ">=3.11"
 dependencies = [
     "flax==0.10.4",
     "jax==0.5.1",
+    "jaxlib==0.5.1",
+    "jax-cuda12-pjrt==0.5.1",
+    "jax-cuda12-plugin==0.5.1",
     "matplotlib==3.10.1",
     "numpy==1.26.4",
     "optax==0.2.4",
