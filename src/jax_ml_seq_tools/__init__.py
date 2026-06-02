@@ -17,6 +17,7 @@ from .data import (
     one_hot_to_dna,
     parse_fasta,
 )
+from .display import DEV_COMMENT_KEYWORDS, display, drop_dev_comments
 from .interpret import compute_input_gradient
 from .logging_config import configure_logging
 from .metrics import MetricsLogger, compute_metrics
@@ -41,8 +42,11 @@ __all__ = [
     "NAMED_COLORS",
     "TrainStateWithBatchNorm",
     "TransformerBlock",
+    "DEV_COMMENT_KEYWORDS",
     "compute_input_gradient",
     "compute_metrics",
+    "display",
+    "drop_dev_comments",
     "configure_logging",
     "convert_to_tfds",
     "dna_to_one_hot",
