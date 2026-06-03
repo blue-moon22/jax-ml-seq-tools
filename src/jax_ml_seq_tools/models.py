@@ -64,7 +64,7 @@ class TransformerModel(nn.Module):
             apply_fn=self.apply,
             tx=tx,
             params=variables["params"],
-            batch_stats=variables["batch_stats"],
+            batch_stats=variables.get("batch_stats"),
             key=rng_dropout,
         )
         return state
