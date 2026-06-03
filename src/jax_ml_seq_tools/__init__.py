@@ -22,9 +22,7 @@ from .interpret import compute_input_gradient
 from .logging_config import configure_logging
 from .metrics import MetricsLogger, compute_metrics
 from .models import (
-    ConvBlock,
-    ConvTransformerModel,
-    MLPBlock,
+    TransformerModel,
     TrainStateWithBatchNorm,
     TransformerBlock,
 )
@@ -34,14 +32,12 @@ from .viz import DEFAULT_SPLIT_COLORS, NAMED_COLORS, plot_binding_site, to_df
 __version__ = "0.1.0"
 
 __all__ = [
-    "ConvBlock",
-    "ConvTransformerModel",
     "DEFAULT_SPLIT_COLORS",
-    "MLPBlock",
     "MetricsLogger",
     "NAMED_COLORS",
     "TrainStateWithBatchNorm",
     "TransformerBlock",
+    "TransformerModel",
     "DEV_COMMENT_KEYWORDS",
     "compute_input_gradient",
     "compute_metrics",
