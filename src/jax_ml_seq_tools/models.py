@@ -32,7 +32,7 @@ class TransformerBlock(nn.Module):
         x = nn.Dense(self.dense_units)(x)
         x = nn.gelu(x)
         x = nn.Dropout(rate=self.dropout_rate)(x, deterministic=not is_training)
-        x = nn.Dense(self.dense_units)(x)
+        x = nn.Dense(residual.shape[-1])(x)
         x += residual
         return x
 
