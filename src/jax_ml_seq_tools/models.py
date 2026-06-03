@@ -13,6 +13,29 @@ class TrainStateWithBatchNorm(TrainState):
     batch_stats: dict | None
     key: jax.Array
 
+
+class ConvBlock(nn.Module):
+    """Convolutional block with batch norm, GELU and max pooling."""
+
+    conv_filters: int
+    kernel_size: tuple[int]
+    pool_size: int
+
+    @nn.compact
+    def __call__(self, x, is_training: bool = True):
+        x = nn.Conv(
+            features=self.conv_filters,
+            kernel_size=self.kernel_size,
+            padding="SAME",
+        )(x)
+        x = nn.BatchNorm(use_running_average=not is_training)(x)
+        x = nn.gelu(x)
+        x = nn.max_pool(
+            x, window_shape=(self.pool_size,), strides=(self.pool_size,)
+        )
+        return x
+
+
 class TransformerBlock(nn.Module):
     """Transformer block with self-attention and MLP."""
 
@@ -32,25 +55,59 @@ class TransformerBlock(nn.Module):
         x = nn.Dense(self.dense_units)(x)
         x = nn.gelu(x)
         x = nn.Dropout(rate=self.dropout_rate)(x, deterministic=not is_training)
-        x = nn.Dense(residual.shape[-1])(x)
+        x = nn.Dense(self.dense_units)(x)
         x += residual
         return x
 
-class TransformerModel(nn.Module):
-    """Model combining transformer blocks."""
 
+class MLPBlock(nn.Module):
+    """Dense + GELU + dropout block."""
+
+    dense_units: int
+    dropout_rate: float = 0.0
+
+    @nn.compact
+    def __call__(self, x, is_training: bool = True):
+        x = nn.Dense(self.dense_units)(x)
+        x = nn.gelu(x)
+        x = nn.Dropout(rate=self.dropout_rate)(x, deterministic=not is_training)
+        return x
+
+
+class ConvTransformerModel(nn.Module):
+    """Model combining CNN, transformer, and MLP blocks."""
+
+    num_conv_blocks: int = 2
+    conv_filters: int = 64
+    kernel_size: tuple[int] = (10,)
+    num_mlp_blocks: int = 2
     dense_units: int = 128
     dropout_rate: float = 0.2
-    num_transformer_blocks: int = 1
+    num_transformer_blocks: int = 0
     num_transformer_heads: int = 8
     transformer_dense_units: int = 64
 
     @nn.compact
     def __call__(self, x, is_training: bool = True):
+        for _ in range(self.num_conv_blocks):
+            x = ConvBlock(
+                conv_filters=self.conv_filters,
+                kernel_size=self.kernel_size,
+                pool_size=2,
+            )(x, is_training)
+
         for _ in range(self.num_transformer_blocks):
             x = TransformerBlock(
                 num_heads=self.num_transformer_heads,
                 dense_units=self.transformer_dense_units,
+                dropout_rate=self.dropout_rate,
+            )(x, is_training)
+
+        x = x.reshape((x.shape[0], -1))
+
+        for i in range(self.num_mlp_blocks):
+            x = MLPBlock(
+                dense_units=self.dense_units // (i + 1),
                 dropout_rate=self.dropout_rate,
             )(x, is_training)
 
@@ -64,7 +121,7 @@ class TransformerModel(nn.Module):
             apply_fn=self.apply,
             tx=tx,
             params=variables["params"],
-            batch_stats=variables.get("batch_stats"),
+            batch_stats=variables["batch_stats"],
             key=rng_dropout,
         )
         return state
